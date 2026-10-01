@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "datamaster"
+version = "0.1.0"
+description = "Ask your database questions in plain English; get plain-English answers plus the SQL used."
+requires-python = ">=3.10"
+dependencies = [
+    "anthropic>=0.40",
+    "sqlalchemy>=2.0,<2.1",   # snowflake-sqlalchemy doesn't support 2.1 yet
+    "pandas>=2.0",
+    "python-dotenv>=1.0",
+    "streamlit>=1.35",
+]
+
+[project.optional-dependencies]
+postgres = ["psycopg2-binary>=2.9"]
+mysql = ["pymysql>=1.1"]                       # MySQL / MariaDB
+mssql = ["pymssql>=2.3", "pyodbc>=5.0"]        # SQL Server / Azure SQL (pymssql needs no ODBC install)
+oracle = ["oracledb>=2.0"]                     # thin mode, no Oracle client needed
+redshift = ["sqlalchemy-redshift>=0.8", "redshift_connector>=2.0"]
+snowflake = ["snowflake-sqlalchemy>=1.6"]
+bigquery = ["sqlalchemy-bigquery>=1.11"]
+databricks = ["databricks-sqlalchemy>=2.0"]
+duckdb = ["duckdb-engine>=0.13"]
+all-dbs = ["datamaster[postgres,mysql,mssql,oracle,redshift,snowflake,bigquery,databricks,duckdb]"]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+datamaster = "datamaster.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
